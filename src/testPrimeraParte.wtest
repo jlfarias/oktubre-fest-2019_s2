@@ -1,0 +1,67 @@
+import cervezas.*
+import personas.*
+import jarras.*
+import paises.*
+
+test "jarrasYMarcas" {
+	//UNA CORONA cant alcohol x l = 0.1 graduacion 0.1
+	const corona = new CervezaRubia( paisDeOrigen = mexico, graduacionAlcoholica = 0.1 )
+	corona.grsLupulo(6)
+	
+	// TEST CORONA ---------------
+	assert.equals(0.1, corona.graduacionAlcoholica())
+	
+
+	//UNA GUINESS 8  cant alcohol x l = 0.045
+	gradReglamentaria.gradMundial(0.09)
+	const guiness = new CervezaNegra( paisDeOrigen = belga)
+	guiness.grsLupulo(5)
+	
+	// TEST GUINESS---------------
+	assert.equals(0.09, guiness.graduacionAlcoholica())	
+	assert.equals(belga, guiness.paisDeOrigen())
+
+	
+	// UNA HOFBRAU// 8  cant alcohol x l = 0.08 * 1.25
+	gradReglamentaria.gradMundial(0.064)
+	const hofbrau = new CervezaRoja(paisDeOrigen = aleman)
+	hofbrau.grsLupulo(3.75)	
+	
+	// TEST HOFBRAU---------------
+	//RETORNA GRAD REGLAMEN.  6.4 * 1.25
+	assert.equals(0.08, hofbrau.graduacionAlcoholica())
+	assert.equals(3.75, hofbrau.grsLupulo())
+	
+/*----------------------------------------------------------------------------------- */
+	// CREAR INSTANCIAS DE JARRAS
+	const jHof = new Jarras(marca = hofbrau, capacidad = 0.5 )
+	const jGui = new Jarras(marca = guiness, capacidad = 0.5 )
+
+	// CREAR UNA PERSONA
+	const herbert = new Aleman( peso = 80, nivelDeAguante = 9.7, musicaTradicional = true, nacionalidad = aleman )
+	herbert.comprarJarras(jHof)
+	herbert.comprarJarras(jGui)
+	
+	//TEST A HERBERT ALCOHOL 
+	assert.equals(0.072, herbert.totalAlcohol())
+	assert.equals(false, herbert.estaEbrio())
+	
+	//TEST DE GUSTOS
+	const novak = new Belga( peso = 87, nivelDeAguante = 9.0, musicaTradicional = false, nacionalidad = belga )
+	const noah = new Checo( peso = 90, nivelDeAguante = 9.2, musicaTradicional = true, nacionalidad = checo )
+	
+	assert.equals(true, herbert.leGustaMarca(corona))
+	assert.equals(true, herbert.leGustaMarca(guiness))
+	assert.equals(true, herbert.leGustaMarca(hofbrau))
+
+	assert.equals(true, novak.leGustaMarca(corona))
+	assert.equals(true, novak.leGustaMarca(guiness))	
+	assert.equals(false, novak.leGustaMarca(hofbrau))
+	
+	assert.equals(true, noah.leGustaMarca(corona))
+	assert.equals(true, noah.leGustaMarca(corona))
+	assert.equals(false, noah.leGustaMarca(hofbrau))
+}
+
+
+

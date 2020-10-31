@@ -1,0 +1,81 @@
+import carpasCerveceras.*
+import jarras.*
+import personas.*
+import cervezas.*
+import paises.*
+
+
+test "jarrasCarpasPersonas" {
+	
+// MARCAS --------------------------------------------------
+	gradReglamentaria.gradMundial(0.09)
+	
+	const hofbrau = new CervezaRoja(grsLupulo = 4.7, paisDeOrigen=aleman)
+	const guiness = new CervezaNegra(grsLupulo = 4.2, paisDeOrigen=belga)
+	
+	assert.equals(0.1125, hofbrau.graduacionAlcoholica())
+	assert.equals(0.084, guiness.graduacionAlcoholica())
+	
+// CARPAS --------------------------------------------------	
+	const carpGuiness = new Carpa(marcaQueVende = guiness)
+	const carpHofbrau = new Carpa(marcaQueVende = hofbrau, tieneBanda = true)
+	
+	assert.equals(10, carpHofbrau.limAdmitido())
+	assert.equals(false, carpGuiness.tieneBanda())
+
+// JARRAS --------------------------------------------------	
+	const jHof = new Jarras(marca = hofbrau, capacidad = 0.5 )
+	const jGui = new Jarras(marca = guiness, capacidad = 0.7 )
+	
+	assert.equals(0.05625, jHof.cantidadDeAlcohol())
+	assert.equals(0.0588, jGui.cantidadDeAlcohol())
+	
+// PERSONAS --------------------------------------------------		
+	const herbert = new Aleman(peso = 80, nivelDeAguante = 9.7, musicaTradicional = true, nacionalidad = aleman) 
+	const novak = new Belga(peso = 92, nivelDeAguante = 10.3, nacionalidad= belga)
+
+	assert.equals([], novak.jarrasCompradas())
+	assert.equals([], herbert.jarrasCompradas())
+
+// test PERSONA QUIERE ENTRAR ----------------------------------------------	
+	assert.equals(true, novak.personaQuiereEntrar(carpGuiness))
+	assert.equals(false, novak.personaQuiereEntrar(carpHofbrau))
+	
+	assert.equals(false, herbert.personaQuiereEntrar(carpGuiness))
+	assert.equals(true, herbert.personaQuiereEntrar(carpHofbrau))
+
+// test CARPA DEJA ENTRAR ----------------------------------------------
+	assert.equals(true, carpGuiness.carpaDejaEntrar(novak))
+	assert.equals(true, carpGuiness.carpaDejaEntrar(herbert))
+	
+	assert.equals(true, carpHofbrau.carpaDejaEntrar(herbert))
+	assert.equals(true, carpHofbrau.carpaDejaEntrar(novak))
+	
+// INGRESAR	------------------------------------------------------
+	carpHofbrau.ingresar(herbert)
+	carpHofbrau.servirJarra(herbert, 0.5)
+	carpHofbrau.servirJarra(herbert, 0.5)
+	
+	assert.equals(0.1125,herbert.totalAlcohol())
+	assert.equals(false, herbert.estaEbrio())
+	assert.equals(0, carpHofbrau.ebriosEmpedernidos())
+	assert.equals(true, herbert.esPatriota())
+	assert.equals(true, carpHofbrau.esHomogenea())
+	
+	novak.musicaTradicional(true)
+	carpHofbrau.ingresar(novak)
+	carpHofbrau.servirJarra(novak, 1)
+	carpHofbrau.servirJarra(novak, 1)
+	
+	assert.equals(0.1125,herbert.totalAlcohol())
+	assert.equals(true, novak.estaEbrio())
+	assert.equals(1, carpHofbrau.ebriosEmpedernidos())
+	assert.equals(false, novak.esPatriota())
+	assert.equals(false, carpHofbrau.esHomogenea())
+
+
+// PRECIO DE VENTA	
+	assert.equals(234, carpHofbrau.precioDeVenta())
+	
+
+}
